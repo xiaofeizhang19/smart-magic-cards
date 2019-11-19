@@ -25,10 +25,11 @@ function createCards() {
 
 // Function to clear out the initial button and create new buttons to play the game.
 const startButton = document.getElementById('start-game');
+const gameButtons = document.getElementById('buttons')
 function createButtons() {
   // Your Code
-  console.log(startButton)
-  startButton.style.dislay = "none";
+  startButton.style.display = "none";
+  gameButtons.style.display = "block";
 }
 
 // Function to start the game by clearing the wrapper, creating
