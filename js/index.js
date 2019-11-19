@@ -4,10 +4,10 @@ const cardsWrapper = document.querySelector('.cards-wrapper');
 function createCards() {
   const cards = [];
   // Create an array with objects containing the value and the suit of each card
-  for (let i = 0; i < 52; i += 1) {
+  for (let i = 1; i <= 52; i += 1) {
     const cardObject = {
-      value: i % 13,
-      suit: suit[Math.floor(i / 13)],
+      value: i % 13 === 0 ? 13 : i % 13,
+      suit: suit[Math.floor((i - 1)/ 13)],
     };
     cards.push(cardObject);
   }
@@ -24,8 +24,11 @@ function createCards() {
 }
 
 // Function to clear out the initial button and create new buttons to play the game.
+const startButton = document.getElementById('start-game');
 function createButtons() {
   // Your Code
+  console.log(startButton)
+  startButton.style.dislay = "none";
 }
 
 // Function to start the game by clearing the wrapper, creating
