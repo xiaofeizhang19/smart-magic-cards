@@ -1,13 +1,14 @@
 const suit = ['hearts', 'spades', 'diamonds', 'clubs'];
 const cardsWrapper = document.querySelector('.cards-wrapper');
+const cardSpacing = 22;
 
 function createCards() {
   const cards = [];
   // Create an array with objects containing the value and the suit of each card
-  for (let i = 1; i <= 52; i += 1) {
+  for (let i = 0; i < 52; i += 1) {
     const cardObject = {
-      value: i % 13 === 0 ? 13 : i % 13,
-      suit: suit[Math.floor((i - 1)/ 13)],
+      value: (i % 13) + 1,
+      suit: suit[Math.floor(i / 13)],
     };
     cards.push(cardObject);
   }
@@ -17,6 +18,7 @@ function createCards() {
     const positionFromLeft = i * 22;
     const cardElement = document.createElement('div');
     cardElement.setAttribute('data-value', card.value);
+    cardElement.setAttribute('sorted-pos', i);
     cardElement.classList.add('card', `${card.suit}-${card.value}`);
     cardElement.style.left = `${positionFromLeft}px`;
     cardsWrapper.append(cardElement);
@@ -24,12 +26,37 @@ function createCards() {
 }
 
 // Function to clear out the initial button and create new buttons to play the game.
-const startButton = document.getElementById('start-game');
-const gameButtons = document.getElementById('buttons')
 function createButtons() {
   // Your Code
+  const startButton = document.getElementById('start-game');
+  const gameButtons = document.getElementById('buttons');
   startButton.style.display = "none";
   gameButtons.style.display = "block";
+}
+
+function shuffleCards() {
+  let length = cardsWrapper.childElementCount;
+  for (let i = length; i > 0; i--) {
+    let j = Math.floor(Math.random() * length) + 1;
+    if (i !== j) {
+      swap(cardsWrapper.childNodes[i], cardsWrapper.childNodes[j]);
+      fixPadding(i);
+      fixPadding(j);
+    }
+  }
+}
+
+function swap(cardA, cardB) {
+  let temp = document.createElement("div");
+
+  cardsWrapper.insertBefore(temp, cardA);
+  cardsWrapper.insertBefore(cardA, cardB);
+  cardsWrapper.insertBefore(cardB, temp);
+  cardsWrapper.removeChild(temp);
+}
+
+function fixPadding(index) {
+  cardsWrapper.childNodes[index].style.left = `${(index - 1) * cardSpacing}px`;
 }
 
 // Function to start the game by clearing the wrapper, creating
@@ -40,3 +67,4 @@ function startGame() {
 }
 
 document.getElementById('start-game').addEventListener('click', startGame);
+document.getElementById('shuffle').addEventListener('click', shuffleCards);
