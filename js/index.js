@@ -43,7 +43,7 @@ function startGame() {
 }
 
 function shuffleCards() {
-  let length = cardsWrapper.childElementCount;
+  const length = cardsWrapper.childElementCount;
   for (let i = length; i > 0; i--) {
     let j = Math.floor(Math.random() * length) + 1;
     if (i !== j) {
@@ -68,9 +68,9 @@ function fixPadding(index) {
 }
 
 function toggleHideAndShow() {
-  let length = cardsWrapper.childElementCount;
+  const length = cardsWrapper.childElementCount;
   for (let i = 1; i <= length; i++) {
-    let card = cardsWrapper.childNodes[i];
+    const card = cardsWrapper.childNodes[i];
     if (card.classList.contains('hidden')) {
       card.className = "";
       const suit = card.getAttribute('suit');
@@ -84,7 +84,21 @@ function toggleHideAndShow() {
 }
 
 function sortCards() {
-
+  // We only have 52 cards so selection sort is fast enough despite
+  // O(n^2) time complexity.
+  const length = cardsWrapper.childElementCount;
+  for (let i = 1; i <= length; i++) {
+    for (let j = i; j <= length; j++) {
+      targetCard = cardsWrapper.childNodes[j];
+      sortedPos = parseInt(targetCard.getAttribute('sorted-pos'));
+      if (sortedPos === i - 1) {
+        swap(cardsWrapper.childNodes[i], targetCard);
+        fixPadding(i);
+        fixPadding(j);
+        break;
+      }
+    }
+  }
 }
 
 document.getElementById('start-game').addEventListener('click', startGame);
