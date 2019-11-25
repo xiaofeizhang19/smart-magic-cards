@@ -17,28 +17,12 @@ function createCards() {
   cards.forEach((card, i) => {
     const positionFromLeft = i * cardSpacing;
     const cardElement = document.createElement('div');
-    cardElement.setAttribute('card-suit', card.suit);
     cardElement.setAttribute('data-value', card.value);
     cardElement.setAttribute('sorted-pos', i);
     cardElement.classList.add('card', `${card.suit}-${card.value}`);
     cardElement.style.left = `${positionFromLeft}px`;
     cardsWrapper.append(cardElement);
   });
-}
-
-// Function to clear out the initial button and create new buttons to play the game.
-function createButtons() {
-  const startButton = document.getElementById('start-game');
-  const gameButtons = document.getElementById('buttons');
-  startButton.style.display = 'none';
-  gameButtons.style.display = 'block';
-}
-
-// Function to start the game by clearing the wrapper, creating
-// and appending the buttons and all the cards to the DOM
-function startGame() {
-  createButtons();
-  createCards();
 }
 
 function fixPadding(index) {
@@ -66,24 +50,16 @@ function shuffleCards() {
   }
 }
 
-function toggleHideAndShow() {
-  const length = cardsWrapper.childElementCount;
-  for (let i = 1; i <= length; i += 1) {
-    const card = cardsWrapper.childNodes[i];
-    if (card.classList.contains('hidden')) {
-      card.className = '';
-      const cardSuit = card.getAttribute('card-suit');
-      const cardValue = card.getAttribute('data-value');
-      card.classList.add('card', `${cardSuit}-${cardValue}`);
-    } else {
-      card.className = '';
-      card.classList.add('hidden', 'card');
-    }
+function toggleShowAndHide() {
+  if (cardsWrapper.classList.contains('hidden')) {
+    cardsWrapper.classList.remove('hidden');
+  } else {
+    cardsWrapper.classList.add('hidden');
   }
 }
 
 function sortCards() {
-  // We only have 52 cards so selection sort is fast enough despite
+  // There are only 52 cards so selection sort is fast enough despite
   // O(n^2) time complexity.
   const length = cardsWrapper.childElementCount;
   for (let i = 1; i <= length; i += 1) {
@@ -100,7 +76,41 @@ function sortCards() {
   }
 }
 
+// Function to clear out the initial button and create new buttons to play the game.
+function createButtons() {
+  const startButton = document.getElementById('start-game');
+  startButton.parentNode.removeChild(startButton);
+
+  const buttonWrapper = document.querySelector('.btn-wrapper');
+
+  const shuffle = document.createElement('button');
+  shuffle.setAttribute('id', 'shuffle');
+  shuffle.setAttribute('class', 'btn btn-lg btn-secondary');
+  shuffle.innerHTML = 'Shuffle';
+  shuffle.addEventListener('click', shuffleCards);
+
+  const showAndHide = document.createElement('button');
+  showAndHide.setAttribute('id', 'show-hide');
+  showAndHide.setAttribute('class', 'btn btn-lg btn-secondary');
+  showAndHide.innerHTML = 'Show/Hide';
+  showAndHide.addEventListener('click', toggleShowAndHide);
+
+  const magic = document.createElement('button');
+  magic.setAttribute('id', 'magic');
+  magic.setAttribute('class', 'btn btn-lg btn-secondary');
+  magic.innerHTML = 'Magic';
+  magic.addEventListener('click', sortCards);
+
+  buttonWrapper.appendChild(shuffle);
+  buttonWrapper.appendChild(showAndHide);
+  buttonWrapper.appendChild(magic);
+}
+
+// Function to start the game by clearing the wrapper, creating
+// and appending the buttons and all the cards to the DOM
+function startGame() {
+  createButtons();
+  createCards();
+}
+
 document.getElementById('start-game').addEventListener('click', startGame);
-document.getElementById('shuffle').addEventListener('click', shuffleCards);
-document.getElementById('show-hide').addEventListener('click', toggleHideAndShow);
-document.getElementById('magic').addEventListener('click', sortCards);
