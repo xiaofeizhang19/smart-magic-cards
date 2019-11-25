@@ -17,7 +17,7 @@ function createCards() {
   cards.forEach((card, i) => {
     const positionFromLeft = i * cardSpacing;
     const cardElement = document.createElement('div');
-    cardElement.setAttribute('suit', card.suit);
+    cardElement.setAttribute('card-suit', card.suit);
     cardElement.setAttribute('data-value', card.value);
     cardElement.setAttribute('sorted-pos', i);
     cardElement.classList.add('card', `${card.suit}-${card.value}`);
@@ -28,11 +28,10 @@ function createCards() {
 
 // Function to clear out the initial button and create new buttons to play the game.
 function createButtons() {
-  // Your Code
   const startButton = document.getElementById('start-game');
   const gameButtons = document.getElementById('buttons');
-  startButton.style.display = "none";
-  gameButtons.style.display = "block";
+  startButton.style.display = 'none';
+  gameButtons.style.display = 'block';
 }
 
 // Function to start the game by clearing the wrapper, creating
@@ -42,10 +41,23 @@ function startGame() {
   createCards();
 }
 
+function fixPadding(index) {
+  cardsWrapper.childNodes[index].style.left = `${(index - 1) * cardSpacing}px`;
+}
+
+function swap(cardA, cardB) {
+  const temp = document.createElement('div');
+
+  cardsWrapper.insertBefore(temp, cardA);
+  cardsWrapper.insertBefore(cardA, cardB);
+  cardsWrapper.insertBefore(cardB, temp);
+  cardsWrapper.removeChild(temp);
+}
+
 function shuffleCards() {
   const length = cardsWrapper.childElementCount;
-  for (let i = length; i > 0; i--) {
-    let j = Math.floor(Math.random() * length) + 1;
+  for (let i = 1; i <= length; i += 1) {
+    const j = Math.floor(Math.random() * length) + 1;
     if (i !== j) {
       swap(cardsWrapper.childNodes[i], cardsWrapper.childNodes[j]);
       fixPadding(i);
@@ -54,30 +66,17 @@ function shuffleCards() {
   }
 }
 
-function swap(cardA, cardB) {
-  let temp = document.createElement("div");
-
-  cardsWrapper.insertBefore(temp, cardA);
-  cardsWrapper.insertBefore(cardA, cardB);
-  cardsWrapper.insertBefore(cardB, temp);
-  cardsWrapper.removeChild(temp);
-}
-
-function fixPadding(index) {
-  cardsWrapper.childNodes[index].style.left = `${(index - 1) * cardSpacing}px`;
-}
-
 function toggleHideAndShow() {
   const length = cardsWrapper.childElementCount;
-  for (let i = 1; i <= length; i++) {
+  for (let i = 1; i <= length; i += 1) {
     const card = cardsWrapper.childNodes[i];
     if (card.classList.contains('hidden')) {
-      card.className = "";
-      const suit = card.getAttribute('suit');
-      const value = card.getAttribute('data-value');
-      card.classList.add('card', `${suit}-${value}`);
+      card.className = '';
+      const cardSuit = card.getAttribute('card-suit');
+      const cardValue = card.getAttribute('data-value');
+      card.classList.add('card', `${cardSuit}-${cardValue}`);
     } else {
-      card.className = "";
+      card.className = '';
       card.classList.add('hidden', 'card');
     }
   }
@@ -87,10 +86,10 @@ function sortCards() {
   // We only have 52 cards so selection sort is fast enough despite
   // O(n^2) time complexity.
   const length = cardsWrapper.childElementCount;
-  for (let i = 1; i <= length; i++) {
-    for (let j = i; j <= length; j++) {
-      targetCard = cardsWrapper.childNodes[j];
-      sortedPos = parseInt(targetCard.getAttribute('sorted-pos'));
+  for (let i = 1; i <= length; i += 1) {
+    for (let j = i; j <= length; j += 1) {
+      const targetCard = cardsWrapper.childNodes[j];
+      const sortedPos = parseInt(targetCard.getAttribute('sorted-pos'), 10);
       if (sortedPos === i - 1) {
         swap(cardsWrapper.childNodes[i], targetCard);
         fixPadding(i);
@@ -103,5 +102,5 @@ function sortCards() {
 
 document.getElementById('start-game').addEventListener('click', startGame);
 document.getElementById('shuffle').addEventListener('click', shuffleCards);
-document.getElementById('show-hide').addEventListener('click', toggleHideAndShow)
+document.getElementById('show-hide').addEventListener('click', toggleHideAndShow);
 document.getElementById('magic').addEventListener('click', sortCards);
