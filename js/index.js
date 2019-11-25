@@ -1,6 +1,6 @@
 const suit = ['hearts', 'spades', 'diamonds', 'clubs'];
 const cardsWrapper = document.querySelector('.cards-wrapper');
-const cardSpacing = 20;
+const cardSpacing = 25;
 
 function createCards() {
   const cards = [];
